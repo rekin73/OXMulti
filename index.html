@@ -7,23 +7,35 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Kółko i krzyk</title>
     <style>
-        #canvas{
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #canvas {
             border: 1px solid black;
+            background-color: yellow;
         }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
-            canvas.width=window.width;
-            canvas.height=window.height;
+            canvas.width = 0.99 * window.innerWidth;
+            canvas.height = 0.99 * window.innerHeight;
+            window.addEventListener("resize", function () {
+                console.log("resize"+window.innerWidth+","+window.innerHeight);
+                var canvas = document.getElementById("canvas");
+                canvas.width = window.innerWidth-2;
+                canvas.height = 0.99 * window.innerHeight-2;
+            });
 
         });
     </script>
 </head>
 
 <body>
-    <canvas id="canvas" ></canvas>
+    <canvas id="canvas"></canvas>
 </body>
 
 </html>
