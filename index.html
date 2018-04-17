@@ -14,7 +14,7 @@
 
         #canvas {
             border: 1px solid black;
-            background-color: yellow;
+            
         }
     </style>
     <script>
@@ -23,13 +23,19 @@
             var ctx = canvas.getContext("2d");
             canvas.width = 0.99 * window.innerWidth;
             canvas.height = 0.99 * window.innerHeight;
+            //resize
             window.addEventListener("resize", function () {
                 console.log("resize"+window.innerWidth+","+window.innerHeight);
                 var canvas = document.getElementById("canvas");
                 canvas.width = window.innerWidth-2;
                 canvas.height = 0.99 * window.innerHeight-2;
             });
-
+function square(){
+    
+    ctx.strokeRect(1, 1, window.innerWidth, 10);
+    
+}
+square();
         });
     </script>
 </head>
