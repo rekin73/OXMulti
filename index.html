@@ -14,28 +14,64 @@
 
         #canvas {
             border: 1px solid black;
-            
         }
     </style>
     <script>
+        var width = 10;
+        var height = 5;
+        var plane = [];
+        class square{
+            constructor(X,Y){
+                this.x=X;
+                this.y=Y
+            }
+        }
         document.addEventListener("DOMContentLoaded", function (event) {
+            function isIntersect(point, circle) {
+                return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius;
+            }
+
+            canvas.addEventListener('click', (e) => {
+                const pos = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
+                circles.forEach(circle => {
+                    if (isIntersect(mousePoint, circle)) {
+                        alert('click on circle: ' + circle.id);
+                    }
+                });
+            });
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
             canvas.width = 0.99 * window.innerWidth;
             canvas.height = 0.99 * window.innerHeight;
             //resize
             window.addEventListener("resize", function () {
-                console.log("resize"+window.innerWidth+","+window.innerHeight);
+                console.log("resize" + window.innerWidth + "," + window.innerHeight);
                 var canvas = document.getElementById("canvas");
-                canvas.width = window.innerWidth-2;
-                canvas.height = 0.99 * window.innerHeight-2;
+                canvas.width = window.innerWidth - 2;
+                canvas.height = 0.99 * window.innerHeight - 2;
+                square(width, height);
             });
-function square(){
-    
-    ctx.strokeRect(1, 1, window.innerWidth, 10);
-    
-}
-square();
+            function square(wdh, hgh) {
+                var sqrWidth = canvas.width / wdh;
+                var sqrHeight = canvas.height / hgh;
+                var sqrRealWidth = function (W, H) {
+                    if (W > H) { return H } else { return W };
+                }
+                var sqr = sqrRealWidth(sqrWidth, sqrHeight)
+                console.log(sqrRealWidth(sqrWidth, sqrHeight))
+
+                for (var i = 0; i < wdh; i++)
+                    for (var j = 0; j < hgh; j++){
+                        ctx.strokeRect(i * sqr, j * sqr, sqrRealWidth(sqrWidth, sqrHeight), sqrRealWidth(sqrWidth, sqrHeight));
+
+                    }
+
+            }
+
+            square(width, height);
         });
     </script>
 </head>
