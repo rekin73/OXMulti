@@ -20,10 +20,10 @@
         var width = 10;
         var height = 5;
         var plane = [];
-        class square{
-            constructor(X,Y){
-                this.x=X;
-                this.y=Y
+        class square {
+            constructor(Y, X) {
+                this.x = X;
+                this.y = Y
             }
         }
         document.addEventListener("DOMContentLoaded", function (event) {
@@ -36,13 +36,14 @@
                     x: e.clientX,
                     y: e.clientY
                 };
-                circles.forEach(circle => {
-                    if (isIntersect(mousePoint, circle)) {
-                        alert('click on circle: ' + circle.id);
+                console.log(pos);
+                plane.forEach(sqr => {
+                    if (isIntersect(pos, sqr)) {
+                        alert('click on circle: ' + sqr.id);
                     }
                 });
             });
-            var canvas = document.getElementById("canvas");
+            canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
             canvas.width = 0.99 * window.innerWidth;
             canvas.height = 0.99 * window.innerHeight;
@@ -52,9 +53,9 @@
                 var canvas = document.getElementById("canvas");
                 canvas.width = window.innerWidth - 2;
                 canvas.height = 0.99 * window.innerHeight - 2;
-                square(width, height);
+                drawSquare(width, height);
             });
-            function square(wdh, hgh) {
+            function drawSquare(wdh, hgh) {
                 var sqrWidth = canvas.width / wdh;
                 var sqrHeight = canvas.height / hgh;
                 var sqrRealWidth = function (W, H) {
@@ -63,15 +64,20 @@
                 var sqr = sqrRealWidth(sqrWidth, sqrHeight)
                 console.log(sqrRealWidth(sqrWidth, sqrHeight))
 
-                for (var i = 0; i < wdh; i++)
-                    for (var j = 0; j < hgh; j++){
+                for (var i = 0; i < wdh; i++){
+                    plane[i]=[];
+                    for (var j = 0; j < hgh; j++) {
                         ctx.strokeRect(i * sqr, j * sqr, sqrRealWidth(sqrWidth, sqrHeight), sqrRealWidth(sqrWidth, sqrHeight));
-
+                        plane[i][j] = new square(i * sqr, j * sqr);
+                        //plane[i][j]=0;
+                        
                     }
+                }
 
             }
 
-            square(width, height);
+            drawSquare(width, height);
+            console.log(plane);
         });
     </script>
 </head>
