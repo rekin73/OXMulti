@@ -21,12 +21,15 @@
         var height = 5;
         var widthSquare;
         var plane = [];
+        move = true;
+        yourShape = "circle";//||cross
         class square {
             constructor(Y, X, width) {
                 this.x = X;
                 this.y = Y;
                 this.w = width;
                 this.h = width;
+                this.shape = 0;
             }
         }
         document.addEventListener("DOMContentLoaded", function (event) {
@@ -38,40 +41,72 @@
                 //https://stackoverflow.com/questions/5014851/get-click-event-of-each-rectangle-inside-canvas
                 var isCollision = false;
                 for (var i = 0, len = rects.length; i < len; i++) {
-                    for (var j = 0, hig = rects[i].length; j < hig; j++){
+                    for (var j = 0, hig = rects[i].length; j < hig; j++) {
                         var left = rects[i][j].x, right = rects[i][j].x + rects[i][j].w;
-                        var top = rects[i][j].y, bottom = rects[i][j].y+rects[i][j].h;
+                        var top = rects[i][j].y, bottom = rects[i][j].y + rects[i][j].h;
                         //console.log(`left:${left},right:${right},top:${top},bottom:${bottom}`)
-                        
-                    if (right >= x
-                        && left <= x
-                        && bottom >= y
-                        && top <= y) {
-                        isCollision = rects[i][j];
+
+                        if (right >= x
+                            && left <= x
+                            && bottom >= y
+                            && top <= y) {
+                            isCollision = rects[i][j];
                         }
                     }
                 }
                 return isCollision;
             }
-            canvas.addEventListener('click', function (e) {
-                console.log('click: ' + e.offsetX + '/' + e.offsetY);
-                var rect = collides(plane, e.offsetX, e.offsetY);
+            var cross = function (rect) {
+                context.beginPath();
+                context.moveTo(rect.x, rect.y);
+
+                context.lineTo(rect.x + rect.w, rect.y + rect.w);
+                context.moveTo(rect.x + rect.w - 10, rect.y - 10);
+                context.lineTo(rect.x + 10, rect.y + rect.w - 10);
+
+                context.stroke();
+                rect.shape = 1;
+            }
+            var circle = function (rect) {
+                context.beginPath();
+                context.arc(rect.x + rect.w / 2, rect.y + rect.w / 2, rect.w / 2, 0, 2 * Math.PI);
+                context.stroke();
+                rect.shape = 2;
+            }
+            function drawFigure(rect) {
                 if (rect) {
                     console.log('collision: ' + rect.x + '/' + rect.y);
-                    
-                    context.beginPath();
-                    context.moveTo(rect.x, rect.y);
-                    
-                    context.lineTo(rect.x+rect.w, rect.y+rect.w);
-                    console.log("sdasds")
-                    context.stroke();
-                    
-                    
-                    
-                    
+                    switch (rect.shape) {
+                        case 0:
+                            if (yourShape == "cross")
+                                cross(rect)
+                            else
+                                circle(rect)
+                            break;
+                        case 1:
+
+                            break;
+                        case 2:
+
+                            break;
+
+                        default:
+                            break;
+                    }
+
+
+
+
+
                 } else {
                     console.log('no collision');
                 }
+            }
+            canvas.addEventListener('click', function (e) {
+                console.log('click: ' + e.offsetX + '/' + e.offsetY);
+                var rect = collides(plane, e.offsetX, e.offsetY);
+                drawFigure(rect);
+
             }, false);
             canvas = document.getElementById("canvas");
             context = canvas.getContext("2d");
@@ -83,8 +118,40 @@
                 var canvas = document.getElementById("canvas");
                 canvas.width = window.innerWidth - 2;
                 canvas.height = 0.99 * window.innerHeight - 2;
-                drawSquare(width, height);
+                updateSquare(width, height);
             });
+
+
+
+            //Update square
+            function updateSquare(wdh, hgh) {
+                widthSquare = canvas.width / wdh;
+                var sqrWidth = canvas.width / wdh;
+                var sqrHeight = canvas.height / hgh;
+                var sqrRealWidth = function (W, H) {
+                    if (W > H) { return H } else { return W };
+                }
+                var sqr = sqrRealWidth(sqrWidth, sqrHeight)
+                console.log(sqrRealWidth(sqrWidth, sqrHeight))
+
+                for (var i = 0; i < hgh; i++) {
+
+                    for (var j = 0; j < wdh; j++) {
+                        context.strokeRect(j * sqr, i * sqr, sqrRealWidth(sqrWidth, sqrHeight), sqrRealWidth(sqrWidth, sqrHeight));
+                        //plane[i][j] = new square(i * sqr, j * sqr, widthSquare);
+                        plane[i][j].w = widthSquare;
+                        plane[i][j].y = i * sqr;
+                        plane[i][j].x = j * sqr;
+                        if(plane[i][j].shape!=0)
+                        setTimeout(drawFigure(plane[i][j]),250)
+                        //plane[i][j]=0;
+
+                    }
+                }
+                console.log(plane)
+            }
+
+            //draw Square
             function drawSquare(wdh, hgh) {
                 widthSquare = canvas.width / wdh;
                 var sqrWidth = canvas.width / wdh;
